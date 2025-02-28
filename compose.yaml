@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: sawbackend
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo-network
+    command: >
+      bash -c "
+      mongod --fork --logpath /var/log/mongodb.log;
+      mongo sawbackend --eval 'db.createUser({user: \"admin\", pwd: \"admin\", roles: [{role: \"readWrite\", db: \"sawbackend\"}]})';
+      mongod --shutdown;
+      mongod --bind_ip_all
+      "
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: adminpassword
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
+    networks:
+      - mongo-network
+
+volumes:
+  mongo-data:
+
+networks:
+  mongo-network:
