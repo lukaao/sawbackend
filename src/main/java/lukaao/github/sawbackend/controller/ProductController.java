@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lukaao.github.sawbackend.dto.ProductDTO;
 import lukaao.github.sawbackend.dto.ProductListDTO;
 import lukaao.github.sawbackend.service.ProductService;
+import lukaao.github.sawbackend.validation.ValidUUID;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
@@ -30,13 +31,13 @@ public class ProductController {
 
     // Endpoint to get a product by ID
     @GetMapping("/{id}")
-    public ProductDTO getProductById(@PathVariable String id) {
+    public ProductDTO getProductById(@PathVariable @ValidUUID  String id) {
         return productService.getProductById(id);
     }
 
     // Endpoint to update an existing product
     @PutMapping("/{id}")
-    public ProductDTO updateProduct(@PathVariable String id , @Valid @RequestBody ProductDTO product) {
+    public ProductDTO updateProduct(@PathVariable @ValidUUID String id , @Valid @RequestBody ProductDTO product) {
         return productService.updateProduct(id, product);
     }
 

@@ -8,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,8 +21,14 @@ public class ProductService {
 
     // Method to create a new product
     public ProductDTO createProduct(ProductDTO productDTO) {
+
+        String uuid = UUID.randomUUID().toString();
         // Convert the DTO to the Product entity
         Product product = productDTO.toProduct();
+        product.setId(uuid);
+//        product.setCreatedAt(OffsetDateTime.now());
+//        product.setUpdatedAt(OffsetDateTime.now());
+
 
         // Save the product in the repository
         Product savedProduct = productRepository.save(product);

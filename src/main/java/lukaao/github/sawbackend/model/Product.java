@@ -23,33 +23,17 @@ import java.util.UUID;
 public class Product {
 
     @Id
-    private String id = UUID.randomUUID().toString();
+    private String id;
     private String name;
     private String description;
     private BigDecimal price;
     private String category;
     private Integer stock;
-   // private OffsetDateTime createdAt = OffsetDateTime.now();
- //  private OffsetDateTime updatedAt = OffsetDateTime.now();
+//    private OffsetDateTime createdAt;
+//    private OffsetDateTime updatedAt;
 
 
 
-
-    //    public OffsetDateTime getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(OffsetDateTime createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    public OffsetDateTime getUpdatedAt() {
-//        return updatedAt;
-//    }
-//
-//    public void setUpdatedAt(OffsetDateTime updatedAt) {
-//        this.updatedAt = updatedAt;
-//    }
 
 
     public ProductDTO toDto() {
@@ -60,6 +44,8 @@ public class Product {
                 this.price,
                 this.category,
                 this.stock
+//                this.createdAt,
+//                this.updatedAt
         );
     }
 
