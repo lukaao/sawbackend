@@ -4,6 +4,7 @@ import lukaao.github.sawbackend.model.Error;
 import lukaao.github.sawbackend.model.ValidationError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,11 @@ public class GlobalExceptionHandler {
 
         // Return the response with validation failure details
         return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+        return new ResponseEntity<>("Access Denied: You do not have permission to perform this action.", HttpStatus.FORBIDDEN);
     }
 
 

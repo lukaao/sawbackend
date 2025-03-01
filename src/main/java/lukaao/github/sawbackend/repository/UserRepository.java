@@ -1,16 +1,9 @@
 package lukaao.github.sawbackend.repository;
 
-
-import lukaao.github.sawbackend.model.User;
+import lukaao.github.sawbackend.model.UserApp;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-
-@Repository
-public interface UserRepository extends MongoRepository<User, String> {
-
+public interface UserRepository extends MongoRepository<UserApp, String> {
+    Optional<UserApp> findByName(String name);
 }
-
-
-
-
