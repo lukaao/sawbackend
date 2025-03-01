@@ -7,12 +7,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class for managing categories.
+ */
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
 
+    /**
+     * Retrieves all categories from the repository.
+     *
+     * @return a list of all categories
+     */
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }

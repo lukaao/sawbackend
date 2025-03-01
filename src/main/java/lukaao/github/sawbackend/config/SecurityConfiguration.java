@@ -17,28 +17,47 @@ public class SecurityConfiguration {
 
     private final CustomUserDetailsService userDetailsService;
 
+    /**
+     * Constructor for SecurityConfiguration.
+     *
+     * @param userDetailsService A custom user details service that is used for user authentication.
+     */
     public SecurityConfiguration(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-
     }
 
+    /**
+     * Configures the HTTP security settings, including CSRF, form login, basic HTTP authentication,
+     * and authorization rules for specific HTTP methods.
+     *
+     * @param http The HttpSecurity object that provides a mechanism for configuring web security.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
+        return http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection.
+                .formLogin(Customizer.withDefaults()) // Enable default form login.
+                .httpBasic(Customizer.withDefaults()) // Enable default HTTP basic authentication.
                 .authorizeHttpRequests(authorize -> authorize
+                        // Require ADMIN role for specific HTTP methods and URL patterns.
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                        // Any other request requires authentication.
                         .anyRequest().authenticated()
                 )
-                .userDetailsService(userDetailsService)
+                .userDetailsService(userDetailsService) // Use custom user details service for authentication.
                 .build();
     }
 
+    /**
+     * Configures the password encoder used for password hashing and verification.
+     *
+     * @return A BCryptPasswordEncoder with a strength of 10.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
+        return new BCryptPasswordEncoder(10); // BCrypt encoder with strength of 10.
     }
 }
