@@ -42,6 +42,15 @@ public class ProductDTO {
     private Date createdAt;
     private Date updatedAt;
 
+
+    public ProductDTO(String name, String description, BigDecimal price, String category, int stock) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.stock = stock;
+    }
+
     public Product toProduct() {
         Product product = new Product();
         product.setId(this.id);
