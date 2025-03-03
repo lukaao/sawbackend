@@ -1,6 +1,8 @@
 package lukaao.github.sawbackend.model;
 
 
+import java.util.Date;
+
 public class UserApp {
 
     private String id;
@@ -9,24 +11,25 @@ public class UserApp {
     private String password;
     private String role;
     private Boolean isActive = true; // Default to true
-//    private OffsetDateTime createdAt;
-//    private OffsetDateTime updatedAt;
+   private Date createdAt;
+    private Date updatedAt;
 
     // Getters and Setters
 
-    public UserApp(String id, String name, String email, String password, String role) {
+    public UserApp(String id, String name, String email, String password, String role, Date createdAt) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.createdAt = createdAt;
     }
 
-    public Boolean getActive() {
-        return isActive;
+    public String getName() {
+        return name;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRole() {
@@ -43,29 +46,5 @@ public class UserApp {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

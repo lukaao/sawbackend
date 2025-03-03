@@ -1,5 +1,8 @@
 package lukaao.github.sawbackend.controller;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lukaao.github.sawbackend.dto.CategoryDTO;
 import lukaao.github.sawbackend.model.Category;
 import lukaao.github.sawbackend.service.CategoryService;
 import org.springframework.validation.annotation.Validated;
@@ -11,12 +14,14 @@ import java.util.List;
 @RequestMapping("/api/categories")
 @AllArgsConstructor
 @Validated
+@Tag(name = "Category")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
+    @Operation(summary = "Find Many")
     @GetMapping
-    public List<Category> getAllCategories() {
+    public List<CategoryDTO> getAllCategories() {
         return categoryService.getAllCategories();
 
     }

@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -29,11 +30,8 @@ public class Product {
     private BigDecimal price;
     private String category;
     private Integer stock;
-//    private OffsetDateTime createdAt;
-//    private OffsetDateTime updatedAt;
-
-
-
+    private Date createdAt;
+    private Date updatedAt;
 
 
     public ProductDTO toDto() {
@@ -43,9 +41,9 @@ public class Product {
                 this.description,
                 this.price,
                 this.category,
-                this.stock
-//                this.createdAt,
-//                this.updatedAt
+                this.stock,
+                this.createdAt,
+                this.updatedAt
         );
     }
 

@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,6 +34,9 @@ public class ProductService {
         String uuid = UUID.randomUUID().toString();
         Product product = productDTO.toProduct();
         product.setId(uuid);
+        product.setCreatedAt(Date.from(Instant.now()));
+        product.setUpdatedAt(Date.from(Instant.now()));
+
 
         Product savedProduct = productRepository.save(product);
         return savedProduct.toDto();
@@ -61,7 +67,7 @@ public class ProductService {
     /**
      * Updates an existing product.
      *
-     * @param id the ID of the product to update
+     * @param id         the ID of the product to update
      * @param productDTO the updated product details
      * @return the updated product as a DTO
      * @throws RuntimeException if the product is not found
@@ -75,6 +81,7 @@ public class ProductService {
         product.setPrice(productDTO.getPrice());
         product.setCategory(productDTO.getCategory());
         product.setStock(productDTO.getStock());
+        product.setUpdatedAt(Date.from(Instant.now()));
 
         Product updatedProduct = productRepository.save(product);
         return updatedProduct.toDto();
@@ -98,8 +105,8 @@ public class ProductService {
      * @param category the category of the products
      * @param minPrice the minimum price of the products
      * @param maxPrice the maximum price of the products
-     * @param sortBy the field to sort by
-     * @param order the sorting order (asc/desc)
+     * @param sortBy   the field to sort by
+     * @param order    the sorting order (asc/desc)
      * @param pageable the pagination information
      * @return a list of filtered product DTOs
      */

@@ -8,6 +8,7 @@ import lukaao.github.sawbackend.model.Product;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -36,8 +37,8 @@ public class ProductDTO {
     @PositiveOrZero(message = "The 'stock' must be a positive number or zero.")
     private Integer stock;
 
-//    private OffsetDateTime createdAt;
-//    private OffsetDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Product toProduct() {
         Product product = new Product();
@@ -47,8 +48,8 @@ public class ProductDTO {
         product.setPrice(this.price);
         product.setCategory(this.category);
         product.setStock(this.stock);
-//        product.setCreatedAt(this.createdAt);
-//        product.setUpdatedAt(this.updatedAt);
+        product.setCreatedAt(this.createdAt);
+        product.setUpdatedAt(this.updatedAt);
         return product;
     }
 

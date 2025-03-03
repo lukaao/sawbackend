@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,11 +43,12 @@ public class SetupService {
      * Creates predefined categories if none exist in the database.
      */
     private void createCategories() {
+
         if (categoryRepository.count() == 0) {
             List<Category> categories = List.of(
-                    new Category(UUID.randomUUID().toString(), "Electronics"),
-                    new Category(UUID.randomUUID().toString(), "Clothes"),
-                    new Category(UUID.randomUUID().toString(), "Food")
+                    new Category(UUID.randomUUID().toString(), "Electronics", Date.from(Instant.now())),
+                    new Category(UUID.randomUUID().toString(), "Clothes", Date.from(Instant.now())),
+                    new Category(UUID.randomUUID().toString(), "Food", Date.from(Instant.now()))
             );
             categoryRepository.saveAll(categories);
         }
@@ -56,8 +59,8 @@ public class SetupService {
      */
     private void createUsers() {
         if (userRepository.count() == 0) {
-            UserApp admin = new UserApp(UUID.randomUUID().toString(), "admin", "admin@example.com", encoder.encode("admin"), "ADMIN");
-            UserApp user = new UserApp(UUID.randomUUID().toString(), "user", "user@example.com", encoder.encode("user"), "USER");
+            UserApp admin = new UserApp(UUID.randomUUID().toString(), "admin", "admin@example.com", encoder.encode("admin"), "ADMIN", Date.from(Instant.now()));
+            UserApp user = new UserApp(UUID.randomUUID().toString(), "user", "user@example.com", encoder.encode("user"), "USER", Date.from(Instant.now()));
             userRepository.save(admin);
             userRepository.save(user);
         }

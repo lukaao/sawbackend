@@ -3,10 +3,13 @@ package lukaao.github.sawbackend.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lukaao.github.sawbackend.dto.CategoryDTO;
+import lukaao.github.sawbackend.dto.ProductDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.OffsetDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 @Setter
@@ -19,11 +22,22 @@ public class Category {
     private String id;
     private String name;
 
-//    private OffsetDateTime createdAt;
-//    private OffsetDateTime updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
-    public Category(String id, String name) {
+    public Category(String id, String name, Date createdAt) {
         this.id = id;
         this.name = name;
+        this.createdAt = createdAt;
+    }
+
+
+    public CategoryDTO toDto() {
+        return new CategoryDTO(
+                this.id,
+                this.name,
+                this.createdAt,
+                this.updatedAt
+        );
     }
 }
