@@ -118,7 +118,7 @@ public class ProductController {
         List<ProductDTO> products = productService.getFilteredProducts(category, minPrice, maxPrice, sortBy, order, pageable);
 
         // Retrieve product count and calculate total pages
-        Long count = productService.getProductsCount();
+        Long count = productService.getProductsCount(category, minPrice, maxPrice);
         Long pagesCount = (count / pageSize) + 1;
 
         return new ProductListDTO(products, page, pageSize, Math.toIntExact(pagesCount), count);

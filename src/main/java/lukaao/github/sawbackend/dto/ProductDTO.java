@@ -26,6 +26,7 @@ public class ProductDTO {
     @Size(min = 10, max = 500, message = "The 'description' must be between 10 and 500 characters.")
     private String description;
 
+    @NotNull(message = "The 'price' field is required.")
     @DecimalMin(value = "0.01", message = "The 'price' must be at least 0.01.")
     @DecimalMax(value = "999999.99", message = "The 'price' must not exceed 999999.99.")
     private BigDecimal price;
@@ -34,6 +35,7 @@ public class ProductDTO {
     @Pattern(regexp = "^(Electronics|Clothes|Food)$", message = "Category must be one of: Electronics, Clothes, or Food.")
     private String category;
 
+    @NotNull(message = "The 'stock' field is required.")
     @PositiveOrZero(message = "The 'stock' must be a positive number or zero.")
     private Integer stock;
 

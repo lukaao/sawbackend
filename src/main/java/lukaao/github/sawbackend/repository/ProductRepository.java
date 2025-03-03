@@ -87,4 +87,15 @@ public interface ProductRepository extends MongoRepository<Product, String> {
      * @return a paginated list of matching products
      */
     List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
+
+
+    long countByCategory(String category);
+
+    long countByCategoryAndPriceBetween(String category, BigDecimal minPrice, BigDecimal maxPrice);
+
+    long countByCategoryAndPriceGreaterThanEqual(String category, BigDecimal minPrice);
+
+    long countByCategoryAndPriceLessThanEqual(String category, BigDecimal maxPrice);
+
+    long countByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
 }

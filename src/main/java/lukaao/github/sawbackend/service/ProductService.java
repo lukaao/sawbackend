@@ -31,12 +31,9 @@ public class ProductService {
      * @return the created product as a DTO
      */
     public ProductDTO createProduct(ProductDTO productDTO) {
-        String uuid = UUID.randomUUID().toString();
         Product product = productDTO.toProduct();
-        product.setId(uuid);
+        product.setId(UUID.randomUUID().toString());
         product.setCreatedAt(Date.from(Instant.now()));
-        product.setUpdatedAt(Date.from(Instant.now()));
-
 
         Product savedProduct = productRepository.save(product);
         return savedProduct.toDto();
@@ -60,9 +57,22 @@ public class ProductService {
      *
      * @return the count of products
      */
-    public Long getProductsCount() {
-        return productRepository.count();
+    public long getProductsCount(String category, BigDecimal minPrice, BigDecimal maxPrice) {
+        if (category != null && minPrice != null && maxPrice != null) {
+            return productRepository.countByCategoryAndPriceBetween(category, minPrice, maxPrice);
+        } else if (category != null && minPrice != null) {
+            return productRepository.countByCategoryAndPriceGreaterThanEqual(category, minPrice);
+        } else if (category != null && maxPrice != null) {
+            return productRepository.countByCategoryAndPriceLessThanEqual(category, maxPrice);
+        } else if (category != null) {
+            return productRepository.countByCategory(category);
+        } else if (minPrice != null && maxPrice != null) {
+            return productRepository.countByPriceBetween(minPrice, maxPrice);
+        } else {
+            return productRepository.count();
+        }
     }
+
 
     /**
      * Updates an existing product.
@@ -132,4 +142,6 @@ public class ProductService {
                 .map(Product::toDto)
                 .collect(Collectors.toList());
     }
+
+
 }
