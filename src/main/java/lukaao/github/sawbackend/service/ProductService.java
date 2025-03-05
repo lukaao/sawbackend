@@ -4,7 +4,9 @@ import lukaao.github.sawbackend.dto.ProductDTO;
 import lukaao.github.sawbackend.model.Product;
 import lukaao.github.sawbackend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -68,6 +70,10 @@ public class ProductService {
             return productRepository.countByCategory(category);
         } else if (minPrice != null && maxPrice != null) {
             return productRepository.countByPriceBetween(minPrice, maxPrice);
+        } else if (minPrice != null) {
+            return productRepository.countByPriceGreaterThanEqual(minPrice);
+        } else if (maxPrice != null) {
+            return productRepository.countByPriceLessThanEqual(maxPrice);
         } else {
             return productRepository.count();
         }
@@ -110,38 +116,64 @@ public class ProductService {
     }
 
     /**
-     * Retrieves filtered products based on category, price range, and sorting criteria.
+     * Retrieves a list of filtered products based on the provided criteria.
+     * The products can be filtered by category, price range, and sorted by the specified field and order.
      *
-     * @param category the category of the products
-     * @param minPrice the minimum price of the products
-     * @param maxPrice the maximum price of the products
-     * @param sortBy   the field to sort by
-     * @param order    the sorting order (asc/desc)
-     * @param pageable the pagination information
-     * @return a list of filtered product DTOs
+     * @param category   The category of the products to be filtered. Can be null to ignore category filtering.
+     * @param minPrice   The minimum price of the products to be included. Can be null to ignore minimum price filtering.
+     * @param maxPrice   The maximum price of the products to be included. Can be null to ignore maximum price filtering.
+     * @param sortBy     The field by which the results should be sorted. Valid values are "name", "price", and "createdAt".
+     *                   Defaults to "id" if invalid or null.
+     * @param order      The order in which the results should be sorted. Can be "asc" for ascending or "desc" for descending.
+     *                   Defaults to ascending if null or invalid.
+     * @param pageable   Pagination information such as the page number and page size.
+     *
+     * @return A list of ProductDTO objects representing the filtered and sorted products.
      */
     public List<ProductDTO> getFilteredProducts(String category, BigDecimal minPrice, BigDecimal maxPrice,
                                                 String sortBy, String order, Pageable pageable) {
+        // Determine the sorting direction based on the provided order parameter.
+        Sort.Direction direction = (order != null && order.equalsIgnoreCase("desc")) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        // List of valid fields for sorting.
+        List<String> validSortFields = List.of("name", "price", "createdAt");
+
+        // Determine the sorting field based on the provided sortBy parameter. Defaults to "id" if invalid or null.
+        String sortField = (sortBy != null && validSortFields.contains(sortBy.toLowerCase())) ? sortBy : "id";
+
+        // Create a Pageable object with the specified sorting parameters.
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(direction, sortField));
+
+        // List to store the filtered products.
         List<Product> products;
 
-        if (category != null && minPrice != null && maxPrice != null) {
-            products = productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice, pageable);
-        } else if (category != null && minPrice != null) {
-            products = productRepository.findByCategoryAndPriceGreaterThanEqual(category, minPrice, pageable);
-        } else if (category != null && maxPrice != null) {
-            products = productRepository.findByCategoryAndPriceLessThanEqual(category, maxPrice, pageable);
-        } else if (category != null) {
-            products = productRepository.findByCategory(category, pageable);
-        } else if (minPrice != null && maxPrice != null) {
-            products = productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
+
+        // Filter products based on price and category if provided.
+        if (minPrice != null && maxPrice != null) {
+            products = (category != null)
+                    ? productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice, sortedPageable)
+                    : productRepository.findByPriceBetween(minPrice, maxPrice, sortedPageable);
+        } else if (minPrice != null) {
+            products = (category != null)
+                    ? productRepository.findByCategoryAndPriceGreaterThanEqual(category, minPrice, sortedPageable)
+                    : productRepository.findByPriceGreaterThanEqual(minPrice, sortedPageable);
+        } else if (maxPrice != null) {
+            products = (category != null)
+                    ? productRepository.findByCategoryAndPriceLessThanEqual(category, maxPrice, sortedPageable)
+                    : productRepository.findByPriceLessThanEqual(maxPrice, sortedPageable);
         } else {
-            products = productRepository.findAll(pageable).getContent();
+            products = (category != null)
+                    ? productRepository.findByCategory(category, sortedPageable)
+                    : productRepository.findAll(sortedPageable).getContent();
         }
 
+        // Convert the list of Product entities to ProductDTOs and return the result.
         return products.stream()
                 .map(Product::toDto)
                 .collect(Collectors.toList());
     }
+
+
 
 
 }

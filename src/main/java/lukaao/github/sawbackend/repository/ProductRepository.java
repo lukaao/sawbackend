@@ -14,13 +14,6 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
 
-    /**
-     * Finds products by category.
-     *
-     * @param category the category to filter by
-     * @return a list of products in the specified category
-     */
-    List<Product> findByCategory(String category);
 
     /**
      * Finds products with a price less than or equal to the specified maximum price.
@@ -28,15 +21,17 @@ public interface ProductRepository extends MongoRepository<Product, String> {
      * @param maxPrice the maximum price
      * @return a list of products matching the criteria
      */
-    List<Product> findByPriceLessThanEqual(double maxPrice);
+    List<Product> findByPriceLessThanEqual(BigDecimal maxPrice, Pageable pageable);
+
 
     /**
-     * Finds products whose names match a given regex pattern.
+     * Finds products with a price greater than or equal to the specified min price.
      *
-     * @param regex the regex pattern to match product names
-     * @return a list of matching products
+     * @param minPrice the min price
+     * @return a list of products matching the criteria
      */
-    List<Product> findByNameRegex(String regex);
+    List<Product> findByPriceGreaterThanEqual(BigDecimal minPrice, Pageable pageable);
+
 
     /**
      * Finds products by category and price range with pagination.
@@ -98,4 +93,9 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     long countByCategoryAndPriceLessThanEqual(String category, BigDecimal maxPrice);
 
     long countByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+
+    long countByPriceLessThanEqual(BigDecimal maxPrice);
+
+    long countByPriceGreaterThanEqual(BigDecimal minPrice);
+
 }
